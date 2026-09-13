@@ -1,0 +1,49 @@
+name: openscaler-oss
+
+services:
+  gateway:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: openscaler-oss:${OPENSCALER_VERSION:-local}
+    pull_policy: never
+    restart: unless-stopped
+    init: true
+    ports:
+      - "${OPENSCALER_BIND_ADDRESS:-127.0.0.1}:8080:8080"
+    environment:
+      OPENSCALER_LISTEN_ADDR: ":8080"
+      OPENSCALER_PUBLIC_URL: "${OPENSCALER_PUBLIC_URL:-http://127.0.0.1:8080}"
+      OPENSCALER_DATABASE_PATH: /data/openscaler.db
+      OPENSCALER_CATALOG_PATH: /etc/openscaler/catalog.yaml
+      OPENSCALER_API_KEYS_FILE: /run/secrets/gateway_api_keys
+      OPENSCALER_ADMIN_USERNAME: "${OPENSCALER_ADMIN_USERNAME:-admin}"
+      OPENSCALER_ADMIN_PASSWORD_FILE: /run/secrets/admin_password
+      OPENSCALER_MASTER_KEY_PATH: /data/keys/master.key
+      OPENSCALER_LOG_PROMPTS: "false"
+      OPENSCALER_SUPPLY_ENABLED: "${OPENSCALER_SUPPLY_ENABLED:-false}"
+    volumes:
+      - openscaler_data:/data
+      - ../config/catalog.yaml:/etc/openscaler/catalog.yaml:ro
+    secrets:
+      - gateway_api_keys
+      - admin_password
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/app/openscaler", "healthcheck"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  openscaler_data:
+
+secrets:
+  gateway_api_keys: {file: ../secrets/gateway_api_keys.txt}
+  admin_password: {file: ../secrets/admin_password.txt}

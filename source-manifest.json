@@ -1,0 +1,415 @@
+{
+  "source_root": "/Users/janus/Ideashub/OpenSwiftScale/OpenSwiftScale-OSS",
+  "source_commit": "e26feebc7568117670717c300fe5a5649f786b80",
+  "snapshot": "working tree including modified and untracked source files",
+  "excluded": [
+    ".git",
+    "data",
+    "secrets",
+    ".env files",
+    "node_modules",
+    "generated internal/webui/dist (rebuilt from frontend source)"
+  ],
+  "files": [
+    {
+      "source": ".dockerignore",
+      "destination": ".dockerignore",
+      "sha256": "03b1d88201d0b5523f8966ee18a5033cf20bf9bc118c11f927195a5d9fc8ecc0"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "destination": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "281ccec0f2e49fb06306ef2cf7b92af4540cfc90e30e78afabdbde9530ef71b4"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/config.yml",
+      "destination": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "6bad687a8959e058a40c2c7daf16e1ad97f8b4c5d67ac2a9efbce0c24c50ecea"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "destination": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "sha256": "3609b0c9cc07708d8ee0f5b4383957282758a70d47d243242613f1f5dd8a9492"
+    },
+    {
+      "source": ".github/PULL_REQUEST_TEMPLATE.md",
+      "destination": ".github/PULL_REQUEST_TEMPLATE.md",
+      "sha256": "19e92f0e080d0f0f64c9a6b5d547021c0ec6036c06afd9c52fdc3abbfc1b896c"
+    },
+    {
+      "source": ".github/dependabot.yml",
+      "destination": ".github/dependabot.yml",
+      "sha256": "3f85822ea6f37c5818edd5981138277dbf1ef3432e7ba13eb683adb6fb5fa099"
+    },
+    {
+      "source": ".github/workflows/ci.yml",
+      "destination": ".github/workflows/ci.yml",
+      "sha256": "d1d07b61f21f72e837c014b0c940ff41c690c772697f6688d3cf300a31d315e0"
+    },
+    {
+      "source": ".github/workflows/release.yml",
+      "destination": ".github/workflows/release.yml",
+      "sha256": "385fa5f55529565107609784b8e0e7d4dd6c5272cd4870823f137701b9654fbf"
+    },
+    {
+      "source": ".gitignore",
+      "destination": ".gitignore",
+      "sha256": "8ec51eec193599e34b0d4e05d4b9de9be63202963151e6d5a12963061bdaddc8"
+    },
+    {
+      "source": ".goreleaser.yml",
+      "destination": ".goreleaser.yml",
+      "sha256": "6edfb8f553bbd42a0b5be9a29bca4c93c52d1f8f501500378001f780b8a2e8b8"
+    },
+    {
+      "source": "CODE_OF_CONDUCT.md",
+      "destination": "CODE_OF_CONDUCT.md",
+      "sha256": "edbbd20256a09819a1afb558fc752fa920e03385db744712a93c2185ace1225d"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "destination": "CONTRIBUTING.md",
+      "sha256": "94df3ced82d112b429f2ea7552f5ea0e953b76cd326229bdc8af8c066c92e301"
+    },
+    {
+      "source": "Dockerfile",
+      "destination": "Dockerfile",
+      "sha256": "f3e6cdee146d0bb880484637522f1a59129bccddace2c64ffee81d57d756d0e9"
+    },
+    {
+      "source": "LICENSE",
+      "destination": "LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "source": "Makefile",
+      "destination": "Makefile",
+      "sha256": "8ac914d85a12a8ecabd7460f706c24286db40db1d1f4ed01657fbeb7b7cc5585"
+    },
+    {
+      "source": "NOTICE",
+      "destination": "NOTICE",
+      "sha256": "ad6d71ecff1160ce10d501ea177367f67737e38a675d8d21bbb14b206464c501"
+    },
+    {
+      "source": "README.md",
+      "destination": "README.md",
+      "sha256": "c4ee6bb535527ca32a3c44c21cdc4458a7847550c028f93d5301b9e6ec29fec0"
+    },
+    {
+      "source": "SECURITY.md",
+      "destination": "SECURITY.md",
+      "sha256": "c9705b1afed5ab9ac262444dad00a2d6261e38de8d3a8cf8ae578a8ff3bb3880"
+    },
+    {
+      "source": "SUPPORT.md",
+      "destination": "SUPPORT.md",
+      "sha256": "a415f9a1fc0181babee592d558c6b95c1f86a701ddf93138e04fb1d9260893a4"
+    },
+    {
+      "source": "cmd/openswiftscale/main.go",
+      "destination": "cmd/openscaler/main.go",
+      "sha256": "037efb945f09875a86ba61f719f384bcb4341cd0f14819c2998d9aedb3979284"
+    },
+    {
+      "source": "config/catalog.yaml",
+      "destination": "config/catalog.yaml",
+      "sha256": "44b03277afc866008ff3d7b53a117b9a853dfe77d4286678fcc2b64e6b3fcbdd"
+    },
+    {
+      "source": "deploy/compose.yaml",
+      "destination": "deploy/compose.yaml",
+      "sha256": "5f8530dffb6efd64bfdf65b175f9ce6b94e9b9720479a1ba008b909f4d413218"
+    },
+    {
+      "source": "docs/API.md",
+      "destination": "docs/API.md",
+      "sha256": "474e979d12e2f251a5347818debe7f23fadccb499897ff6fa668b39e25331cfc"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "destination": "docs/ARCHITECTURE.md",
+      "sha256": "7a4067dcb093ca92c479fe6c989b908845f9a00932aec4e4c1169121cb2cc642"
+    },
+    {
+      "source": "docs/CLOUD_RELATIONSHIP.md",
+      "destination": "docs/CLOUD_RELATIONSHIP.md",
+      "sha256": "e925aa2620dc9ae802577f3ee968b197463cf2e7cec48cdc953dc9b5a2d31938"
+    },
+    {
+      "source": "docs/CONFIGURATION.md",
+      "destination": "docs/CONFIGURATION.md",
+      "sha256": "0480559438d8057f49ff625757c6b635bdf7f0bd2cdb3966b9fd29566680fa4b"
+    },
+    {
+      "source": "docs/DATA_AND_STORAGE.md",
+      "destination": "docs/DATA_AND_STORAGE.md",
+      "sha256": "6eedd3475c38526fbccb2b1c36a4668bda6412035e12dec37a9b9868f3f9033a"
+    },
+    {
+      "source": "docs/DEVELOPMENT.md",
+      "destination": "docs/DEVELOPMENT.md",
+      "sha256": "51578d2c45df209ba1ff92e24818ad44cb43078bf5e0ab957e78d8979811d3cf"
+    },
+    {
+      "source": "docs/OPEN_SOURCE.md",
+      "destination": "docs/OPEN_SOURCE.md",
+      "sha256": "9bc732c0caf1a845b835c75a4f512f9a140e44d176f07d53837a97838f72041a"
+    },
+    {
+      "source": "docs/OPERATIONS.md",
+      "destination": "docs/OPERATIONS.md",
+      "sha256": "e8d7b05bf08d444be6cb53ae48b5e815dba27a87de677fe025a210a33a1f22e3"
+    },
+    {
+      "source": "docs/PRODUCT.md",
+      "destination": "docs/PRODUCT.md",
+      "sha256": "588c0357a8a296d63949e1977768d1cdf8ccf4642c85b38276acea07c00f0524"
+    },
+    {
+      "source": "docs/README.md",
+      "destination": "docs/README.md",
+      "sha256": "7a53f751830836357ae70137d045cb7fe9d7f35862bba30aa378d1529fbfe99f"
+    },
+    {
+      "source": "docs/RELEASES.md",
+      "destination": "docs/RELEASES.md",
+      "sha256": "12903ec7b6c186dcb33e5fa09b6651f4f0869d381cc16a773a7c8a0b22de5683"
+    },
+    {
+      "source": "frontend/index.html",
+      "destination": "frontend/index.html",
+      "sha256": "12155de980c19adde7d9da06fc3e48908275741256f85158f393ad5f7320a724"
+    },
+    {
+      "source": "frontend/package-lock.json",
+      "destination": "frontend/package-lock.json",
+      "sha256": "ba4bc78e58e7b3dac0cde2e09e1f55cd6292cb83f7fc7447c9082f81a6cc5b07"
+    },
+    {
+      "source": "frontend/package.json",
+      "destination": "frontend/package.json",
+      "sha256": "17af1c2cbb45a8147a7bf2e999d7479774f02660674417e4a57355853cb14360"
+    },
+    {
+      "source": "frontend/public/openswiftscale-logo.svg",
+      "destination": "frontend/public/openscaler-logo.svg",
+      "sha256": "605a7d8019d6c65d674b2dd3542b166c7ee8afe93c4ca8503c3218052a0e8a55"
+    },
+    {
+      "source": "frontend/src/App.tsx",
+      "destination": "frontend/src/App.tsx",
+      "sha256": "5d8ed186e3f162021b0a8654975c8d0769560a74562563ac05addef47b13373c"
+    },
+    {
+      "source": "frontend/src/i18n-supplemental.ts",
+      "destination": "frontend/src/i18n-supplemental.ts",
+      "sha256": "c2af5316e71d72cf0c148ffe028299cf61df53063f0d5cf026507f0e4b9e97fc"
+    },
+    {
+      "source": "frontend/src/i18n.tsx",
+      "destination": "frontend/src/i18n.tsx",
+      "sha256": "eb2363d30aedf627e2c2ed26b45561be9efae8ea8445a846d4918c0f0f2bed8b"
+    },
+    {
+      "source": "frontend/src/main.tsx",
+      "destination": "frontend/src/main.tsx",
+      "sha256": "ee901764ff2efaa1d6af5ca2eb7c4bdcb5c431bc64e5375159323cbe169e57fa"
+    },
+    {
+      "source": "frontend/src/styles.css",
+      "destination": "frontend/src/styles.css",
+      "sha256": "a33ee7dae45f7d0da9bf60b049e7857ee02431258119b96b4025800be19865a7"
+    },
+    {
+      "source": "frontend/src/vite-env.d.ts",
+      "destination": "frontend/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "source": "frontend/tsconfig.app.json",
+      "destination": "frontend/tsconfig.app.json",
+      "sha256": "a7266d1c85fa6947c70073256d9a73e4c459e97b0b4ef24b5c48dcab498ef4c5"
+    },
+    {
+      "source": "frontend/tsconfig.json",
+      "destination": "frontend/tsconfig.json",
+      "sha256": "e8d6f7b50828db3953e21c7e92584f9206b3cd2551b4012507372afbb7fe9ce3"
+    },
+    {
+      "source": "frontend/tsconfig.node.json",
+      "destination": "frontend/tsconfig.node.json",
+      "sha256": "bfc7f657f125f75f0d54eabc0afcb6ec0bc6086622b49e8609e411613a0c813d"
+    },
+    {
+      "source": "frontend/vite.config.ts",
+      "destination": "frontend/vite.config.ts",
+      "sha256": "0a4d85b696159217d0e1555409dc5557026f9e486c7c557809f30c7ae5537975"
+    },
+    {
+      "source": "go.mod",
+      "destination": "go.mod",
+      "sha256": "1dd8b9e9ff4408216118dfc2328142db5186df7c08d63cc3efa59b11d01efed5"
+    },
+    {
+      "source": "go.sum",
+      "destination": "go.sum",
+      "sha256": "24d99eff5500559b16cff2acba29f1ceaf3d73110046cbc6906f61cc2a927255"
+    },
+    {
+      "source": "internal/auth/auth.go",
+      "destination": "internal/auth/auth.go",
+      "sha256": "6beb116681a73dd6028853842f0ab999829888dd043e462fc3c51ab8962d3f40"
+    },
+    {
+      "source": "internal/auth/auth_test.go",
+      "destination": "internal/auth/auth_test.go",
+      "sha256": "55d567de1d19ba9f3b1de0372fd163ace6827386c7aab0d89fbb46e9915b4db7"
+    },
+    {
+      "source": "internal/catalog/catalog.go",
+      "destination": "internal/catalog/catalog.go",
+      "sha256": "6aefa955193475950b366756cf9de89a21d6e25ad46c7233865e5f2afdb353fc"
+    },
+    {
+      "source": "internal/catalog/catalog_test.go",
+      "destination": "internal/catalog/catalog_test.go",
+      "sha256": "b4753ba1a099df6cd10df9f1304c602ec0310ac5f579a9316e53589637622a20"
+    },
+    {
+      "source": "internal/config/config.go",
+      "destination": "internal/config/config.go",
+      "sha256": "c792831cf706129f1e7e3817a659af264989b6faf27e3811c4cf231d29703d1b"
+    },
+    {
+      "source": "internal/config/config_test.go",
+      "destination": "internal/config/config_test.go",
+      "sha256": "4f82a964634c990467ec1d4d3585a611b8d6681381b06ec6fe6dfef3fb211e67"
+    },
+    {
+      "source": "internal/gateway/gateway.go",
+      "destination": "internal/gateway/gateway.go",
+      "sha256": "303f0f3f9a1037b61cdc094db25fcfb7e307a876ad18e69844c9fd91398ff129"
+    },
+    {
+      "source": "internal/gateway/gateway_test.go",
+      "destination": "internal/gateway/gateway_test.go",
+      "sha256": "2dfbfacf0d9b7a2bf194097fa6f1608c2b0abcad5e3a8cdf18462bc24db5d809"
+    },
+    {
+      "source": "internal/limit/limit.go",
+      "destination": "internal/limit/limit.go",
+      "sha256": "a572e883c845746b37170ef47e8d8ff962c06156cb0d5ff9303a883f0a7a9e05"
+    },
+    {
+      "source": "internal/limit/limit_test.go",
+      "destination": "internal/limit/limit_test.go",
+      "sha256": "7fe878d8e7f66d164216cfd4472a5bd5244b47e0e0ca8b2bb1d75fced19a6c14"
+    },
+    {
+      "source": "internal/provider/anthropic.go",
+      "destination": "internal/provider/anthropic.go",
+      "sha256": "31c49adeceb104508a526073755ee0dd77b6f2cf04a617f4f38b54d0e720e07d"
+    },
+    {
+      "source": "internal/provider/client.go",
+      "destination": "internal/provider/client.go",
+      "sha256": "2e5f2626ad32780c7ee89e694d9f3ddeeca8f44f5af94345442ab274eb759b55"
+    },
+    {
+      "source": "internal/provider/client_test.go",
+      "destination": "internal/provider/client_test.go",
+      "sha256": "7d1f2009a4b3f3eaffdd9d4682ae96c5a1168f6a5857fd90c55c358ff998ac75"
+    },
+    {
+      "source": "internal/router/router.go",
+      "destination": "internal/router/router.go",
+      "sha256": "741e9a671878236bdd175568bdf1b518636e5dfd8a3be8fb8f3f343da5c19d5a"
+    },
+    {
+      "source": "internal/router/router_test.go",
+      "destination": "internal/router/router_test.go",
+      "sha256": "7bdbf54cf948c70f18ae65c5bf223a8d069466ee35bb1c9a8572ef3c2d3bb3d4"
+    },
+    {
+      "source": "internal/secret/secret.go",
+      "destination": "internal/secret/secret.go",
+      "sha256": "c35632dde086dc88236e092a9da197ca2da327375e016e727b5f585b4331b6c3"
+    },
+    {
+      "source": "internal/secret/secret_test.go",
+      "destination": "internal/secret/secret_test.go",
+      "sha256": "0193c25a0deadf396d00e0b06146856f805f94a1b721b3ff3796563b1e962a4d"
+    },
+    {
+      "source": "internal/store/api_users.go",
+      "destination": "internal/store/api_users.go",
+      "sha256": "d3f4b2b8dd2d295a8aa61a7cf28b47e5df0db6faacfbf1fa996bd08b75f19364"
+    },
+    {
+      "source": "internal/store/store.go",
+      "destination": "internal/store/store.go",
+      "sha256": "e2d39f2e774063be31f89ded136ce326eb60f8fff8bdadae1b06e6590ed81d2b"
+    },
+    {
+      "source": "internal/store/store_test.go",
+      "destination": "internal/store/store_test.go",
+      "sha256": "075d6a1352e643882c4f556fa6adde15cbf564069689f0adb43d3801214c758c"
+    },
+    {
+      "source": "internal/webui/webui.go",
+      "destination": "internal/webui/webui.go",
+      "sha256": "dda7ebd31637707fb99d2847f22032952e9f27263c7b063d0a52298d21def8d6"
+    },
+    {
+      "source": "internal/webui/webui_test.go",
+      "destination": "internal/webui/webui_test.go",
+      "sha256": "3ab2f06219cbb74133c2908f113b439013e0385ba30b7436fe806ff69f41b14d"
+    },
+    {
+      "source": "scripts/build.sh",
+      "destination": "scripts/build.sh",
+      "sha256": "849ddb816548717736b9109e1ad8995ddf6189a8bea48000874f8e76b474a5a6"
+    },
+    {
+      "source": "scripts/dev.sh",
+      "destination": "scripts/dev.sh",
+      "sha256": "5c7642e8d7736eb74e86b26e07e725399a6daa56af6b65601719ecdef7aabe28"
+    },
+    {
+      "source": "scripts/install.sh",
+      "destination": "scripts/install.sh",
+      "sha256": "dde30a96c81eb59808de5028aa08744482db1e130938904fcd45f919c12ec201"
+    },
+    {
+      "source": "scripts/logs.sh",
+      "destination": "scripts/logs.sh",
+      "sha256": "19c686471793016a2784c0da70d5f0a873015acce8b462431a85cc1f10e3bf4d"
+    },
+    {
+      "source": "scripts/seed-alibaba-media-demo-endpoints.sh",
+      "destination": "scripts/seed-alibaba-media-demo-endpoints.sh",
+      "sha256": "ed20a5b693dd1d338a9ecce0584c27d6faf3a06b1b893de70c488e29f362f80e"
+    },
+    {
+      "source": "scripts/seed-example-routes.sh",
+      "destination": "scripts/seed-example-routes.sh",
+      "sha256": "abe2ccbb2b51c4c42196e889a0a21e68384f2e28ff9bc7569dceaa783448b8b8"
+    },
+    {
+      "source": "scripts/seed-qwen-demo-endpoints.sh",
+      "destination": "scripts/seed-qwen-demo-endpoints.sh",
+      "sha256": "83a2b98fbbd33fdc5f497ba6ed6e6acd276f9843376d13138efbc9a22e6cc7e4"
+    },
+    {
+      "source": "scripts/start.sh",
+      "destination": "scripts/start.sh",
+      "sha256": "719015ccb1984885cf37e3492952262ddbcbbef31eca953bed55c0f6dde5e9e5"
+    },
+    {
+      "source": "scripts/stop.sh",
+      "destination": "scripts/stop.sh",
+      "sha256": "e663ac1c6c1809efc804edb23ff0bee8b206b0cccb7c4441a9d95b2b194aef2b"
+    }
+  ]
+}

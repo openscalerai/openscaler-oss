@@ -1,0 +1,279 @@
+# Gateway API
+
+OpenScaler exposes an OpenAI-compatible inference API for applications inside your network. The API is separate from the administrator console: clients use a Gateway API key, while `/api/admin/*` uses the administrator account.
+
+## Base URL
+
+The standard installer detects the gateway host's active LAN address. The resulting client-reachable address is similar to:
+
+```text
+http://192.168.1.25:8080/v1
+```
+
+Use **Console → API access → API access method** to switch between and copy the local and LAN addresses of the current instance. `127.0.0.1` and `localhost` are reachable only from the gateway host. Production environments should normally configure the private DNS name or internal load-balancer address that exposes OpenScaler, for example:
+
+```text
+https://ai-gateway.internal.example.com/v1
+```
+
+Terminate TLS at a trusted internal reverse proxy or ingress when requests cross a host boundary.
+
+## Authentication
+
+Every inference request must include a Gateway API key as a Bearer token:
+
+```http
+Authorization: Bearer <gateway-api-key>
+```
+
+Create normal client credentials in **Console → API access**. Create one API user for each person, application, team, or environment, then issue one or more independently revocable keys to that user. The complete key is shown once; OpenScaler stores only its SHA-256 hash. Disabling a user immediately blocks all of that user's keys, while revoking one key leaves the user's other keys active. The console also records each key's creation time and last-used time.
+
+`scripts/install.sh` generates an initial bootstrap key in `secrets/gateway_api_keys.txt`. The server reads bootstrap keys from `OPENSCALER_API_KEYS` or `OPENSCALER_API_KEYS_FILE` for first-run and compatibility purposes. Prefer managed keys from **API access** for applications and regular users. Do not use the console administrator password as an inference key, commit keys to source control, or expose them in browser-delivered application code.
+
+## Endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/v1/models` | List models that currently have an available provider route. |
+| `POST` | `/v1/chat/completions` | OpenAI-compatible chat completions, including SSE streaming. |
+| `POST` | `/v1/responses` | OpenAI Responses-compatible requests for supported providers. |
+| `POST` | `/v1/embeddings` | Embeddings for routes that advertise embedding capability. |
+| `POST` | `/v1/images/generations` | Image generation for routes that advertise image capability. |
+| `POST` | `/v1/rerank` | Document reranking for routes that advertise rerank capability. |
+| `POST` | `/v1/videos` | Video generation jobs for routes that advertise video capability. |
+| `POST` | `/v1/audio/speech` | Text-to-speech for routes that advertise speech capability. |
+| `POST` | `/v1/audio/transcriptions` | Multipart audio transcription for routes that advertise transcription capability. |
+
+All inference endpoints route only within the exact public `model` ID supplied by the caller. JSON endpoints accept `model` in the request body. Audio transcription accepts `multipart/form-data` with a `model` field and a `file` field. OpenScaler rewrites the public model ID to the selected endpoint's upstream model ID while preserving the remaining request payload.
+
+Health endpoints do not use inference authentication: `GET /healthz` reports process health and `GET /readyz` reports readiness. Administrator endpoints under `/api/admin/*` are intended for the embedded console and use separate HTTP Basic authentication. API-user and key management is available through `/api/admin/users`; it never returns a previously created plaintext key.
+
+## Discover available models
+
+```bash
+export OPENSCALER_URL="http://192.168.1.25:8080/v1"
+export OPENSCALER_KEY="<key-created-in-api-access>"
+
+curl "$OPENSCALER_URL/models" \
+  -H "Authorization: Bearer $OPENSCALER_KEY"
+```
+
+Only models with an enabled connection and a saved Provider API key are returned. Use the returned model `id` exactly in inference requests; it selects the matching route rule.
+
+## Chat completions
+
+```bash
+curl http://192.168.1.25:8080/v1/chat/completions \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-5.6-luna",
+    "messages": [
+      {"role": "user", "content": "Explain this architecture."}
+    ],
+    "stream": false
+  }'
+```
+
+Set `stream` to `true` to receive upstream Server-Sent Events. OpenScaler streams the provider response without persisting prompt bodies.
+
+## Client examples
+
+The Models workspace shows which exact model IDs currently have a ready endpoint. Use one of those IDs with the cURL, Python, Go, Node.js, Java, or Rust examples below.
+
+### Python OpenAI SDK
+
+Python:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://192.168.1.25:8080/v1",
+    api_key="<gateway-api-key>",
+)
+
+response = client.chat.completions.create(
+    model="gpt-5.6-luna",
+    messages=[{"role": "user", "content": "Hello"}],
+)
+print(response.choices[0].message.content)
+```
+
+### Node.js OpenAI SDK
+
+```typescript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "http://192.168.1.25:8080/v1",
+  apiKey: "<gateway-api-key>",
+});
+
+const response = await client.chat.completions.create({
+  model: "gpt-5.6-luna",
+  messages: [{ role: "user", content: "Hello" }],
+});
+console.log(response.choices[0].message.content);
+```
+
+### Go standard library
+
+```go
+import (
+    "bytes"
+    "fmt"
+    "io"
+    "net/http"
+)
+
+body := []byte(`{"model":"gpt-5.6-luna","messages":[{"role":"user","content":"Hello"}]}`)
+req, _ := http.NewRequest("POST", "http://192.168.1.25:8080/v1/chat/completions", bytes.NewReader(body))
+req.Header.Set("Authorization", "Bearer <gateway-api-key>")
+req.Header.Set("Content-Type", "application/json")
+response, err := http.DefaultClient.Do(req)
+if err != nil {
+    panic(err)
+}
+defer response.Body.Close()
+output, _ := io.ReadAll(response.Body)
+fmt.Println(string(output))
+```
+
+### Java HTTP client
+
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+var request = HttpRequest.newBuilder(
+        URI.create("http://192.168.1.25:8080/v1/chat/completions"))
+    .header("Authorization", "Bearer <gateway-api-key>")
+    .header("Content-Type", "application/json")
+    .POST(HttpRequest.BodyPublishers.ofString(
+        "{\"model\":\"gpt-5.6-luna\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"))
+    .build();
+var response = HttpClient.newHttpClient()
+    .send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+
+### Rust with reqwest
+
+```rust
+let response = reqwest::Client::new()
+    .post("http://192.168.1.25:8080/v1/chat/completions")
+    .bearer_auth("<gateway-api-key>")
+    .json(&serde_json::json!({
+        "model": "gpt-5.6-luna",
+        "messages": [{"role": "user", "content": "Hello"}]
+    }))
+    .send().await?;
+println!("{}", response.text().await?);
+```
+
+Use the console-generated examples when possible: they automatically use the current `OPENSCALER_PUBLIC_URL` and selected callable model ID.
+
+## Examples by model capability
+
+The provider must advertise the requested capability for the selected exact model ID. These request bodies are compatible gateway contracts; provider-specific optional fields are passed through when supported.
+
+### Responses API
+
+```bash
+curl "$OPENSCALER_URL/responses" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-text-model-id","input":"Explain exact-model routing."}'
+```
+
+### Embeddings
+
+```bash
+curl "$OPENSCALER_URL/embeddings" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-embedding-model-id","input":"OpenScaler keeps routing transparent."}'
+```
+
+### Image generation
+
+```bash
+curl "$OPENSCALER_URL/images/generations" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-image-model-id","prompt":"A transparent AI gateway","size":"1024x1024"}'
+```
+
+### Reranking
+
+```bash
+curl "$OPENSCALER_URL/rerank" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-rerank-model-id","query":"transparent AI routing","documents":["Exact-model endpoint routing","An unrelated document"]}'
+```
+
+### Video generation
+
+```bash
+curl "$OPENSCALER_URL/videos" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-video-model-id","prompt":"Requests flowing through a transparent AI gateway"}'
+```
+
+Video providers commonly return an asynchronous job rather than completed media. OpenScaler passes the provider response through; poll or retrieve the job according to that provider's contract.
+
+### Speech synthesis
+
+```bash
+curl "$OPENSCALER_URL/audio/speech" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-speech-model-id","input":"Hello from OpenScaler.","voice":"default","response_format":"mp3"}' \
+  --output speech.mp3
+```
+
+### Audio transcription
+
+```bash
+curl "$OPENSCALER_URL/audio/transcriptions" \
+  -H "Authorization: Bearer $OPENSCALER_KEY" \
+  -F "model=your-transcription-model-id" \
+  -F "file=@audio.wav"
+```
+
+The console includes the same capabilities for cURL, Python, Go, Java, Rust, and Node.js. Select one language to view all supported request types vertically.
+
+## Routing behavior
+
+The request's `model` value is the Public Model ID. OpenScaler resolves its configured endpoint pool as follows:
+
+1. The request selects one exact model ID.
+2. Endpoints capable of serving that exact model are inspected in their visible order.
+3. Connection failures, timeouts, and retryable upstream responses advance to another eligible endpoint for the same model.
+4. Ordinary model requests are never silently replaced with a different model ID.
+
+Successful inference responses identify the selected route with these headers:
+
+- `X-OpenScaler-Provider`
+- `X-OpenScaler-Route-Priority`
+
+See [Configuration](CONFIGURATION.md#same-model-endpoint-routing) for endpoint ordering, transparent platform scoring, and failover details. Routing is always limited to endpoints serving the requested exact model ID.
+
+## Errors and request limits
+
+Authentication failures return HTTP `401` with an `invalid_api_key` error. Unknown or unavailable model IDs and invalid request bodies return a JSON error response. Per-key request and concurrency limits are controlled by `OPENSCALER_RATE_LIMIT_RPM` and `OPENSCALER_CONCURRENCY`; exceeding a limit returns HTTP `429`.
+
+Provider errors that are not eligible for failover are passed back to the client. Keep the response request ID and OpenScaler route headers when troubleshooting.
+
+## Production checklist
+
+- Publish the gateway through a private DNS name and TLS-enabled internal ingress.
+- Keep inference keys separate from administrator credentials and provider keys.
+- Give different applications different Gateway API keys so they can be rotated independently.
+- Restrict network access to approved workloads and never expose the default local deployment directly to the public Internet.
+- Verify provider model IDs, capabilities, pricing, and data-handling terms before production use.

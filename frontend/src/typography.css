@@ -1,0 +1,28 @@
+/* Shared roles for every console page, dialog and login screen.
+   Keep layout in styles.css; add semantic exceptions here, not per page. */
+#root { font-family: var(--font-family-ui); font-size: var(--text-base); font-weight: var(--weight-normal); line-height: var(--leading-body); }
+#root :is(h1, h2, h3, h4, h5, h6) { font-family: var(--font-family-ui); font-weight: var(--weight-heading); line-height: var(--leading-heading); letter-spacing: 0; color: var(--ink-strong); }
+#root h1 { font-size: var(--title-page); }
+#root h2 { font-size: var(--title-section); }
+#root h3 { font-size: var(--title-card); }
+#root :is(h4, h5, h6) { font-size: var(--text-base); }
+#root p { font-family: var(--font-family-ui); font-size: var(--text-base); font-weight: var(--weight-normal); line-height: var(--leading-body); }
+#root :is(button, input, select, textarea, a.panel-action, a.admin-action) { font-family: var(--font-family-ui); font-size: var(--text-sm); line-height: 1.45; letter-spacing: 0; }
+#root :is(button, a.panel-action, a.admin-action, label, legend, th) { font-weight: var(--weight-label); }
+#root :is(input, select, textarea) { font-weight: var(--weight-normal); }
+#root :is(label, legend, table, th, td) { font-size: var(--text-sm); }
+#root :is(strong, b) { font-weight: var(--weight-heading); }
+#root :is(small, .state, .pill, .tag, .section-eyebrow, .help-group-title, .workspace-sidebar nav p) { font-size: var(--text-xs); line-height: var(--leading-body); }
+#root :is(small, .field-example) { font-weight: var(--weight-normal); }
+#root :is(.state, .pill, .tag, .section-eyebrow, .help-group-title, .workspace-sidebar nav p) { font-weight: var(--weight-label); }
+#root :is(code, pre) { font-family: var(--font-family-mono); font-size: var(--text-sm); line-height: var(--leading-body); }
+#root :is(.panel-head p, .dialog-title p, .workspace-heading p, .admin-copy, .form-note, .auth-description, .empty, .workspace-empty, .supply-empty, .routing-principle span, .simple-route-note) { font-size: var(--text-base); font-weight: var(--weight-normal); line-height: var(--leading-body); }
+/* Titles rendered as strong rather than heading elements. */
+#root :is(.transparent-nav-summary, .model-directory-label, .endpoint-group > header, .routing-rule-heading) strong { font-size: var(--text-base); }
+#root .help-reading-header strong { font-size: var(--title-section); }
+#root .health-card strong { font-size: var(--title-section); }
+#root .workspace-metrics strong { font-size: var(--text-metric); line-height: 1.2; }
+#root :is(.health-card span, .workspace-metrics span) { font-size: var(--text-sm); font-weight: var(--weight-label); }
+#root .workspace-cloud-steps li > span { font-size: var(--text-sm); font-weight: var(--weight-label); }
+/* Documentation keeps the same type scale, with more space for long reading. */
+#root .help-article :is(p, li, blockquote) { font-size: var(--text-base); line-height: 1.75; }

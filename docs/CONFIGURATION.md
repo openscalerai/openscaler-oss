@@ -1,0 +1,97 @@
+# Configuration
+
+## Required settings
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENSCALER_API_KEYS` or `_FILE` | Comma-separated keys accepted by the inference API. |
+| `OPENSCALER_ADMIN_PASSWORD` or `_FILE` | Password for the administrator console and `/api/admin/*`. |
+
+Provider credentials are not required at startup. Configure them later in the embedded console. Models only appear in `/v1/models` after their connection has a saved key.
+
+## Runtime settings
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `OPENSCALER_ADMIN_USERNAME` | `admin` | Administrator console username. |
+| `OPENSCALER_LISTEN_ADDR` | `:8080` | HTTP listen address. |
+| `OPENSCALER_LAN_LISTEN_ADDR` | empty | Optional second listener using one explicit LAN IP and port, for example `192.168.1.25:8080`. Unspecified addresses such as `0.0.0.0` are rejected. |
+| `OPENSCALER_PUBLIC_URL` | empty | Client-reachable gateway origin shown in the console, for example `http://192.168.1.25:8080` or an internal HTTPS URL. |
+| `OPENSCALER_DATABASE_PATH` | `/data/openscaler.db` | SQLite path. |
+| `OPENSCALER_MASTER_KEY_PATH` | `/data/keys/master.key` | Master key stored separately from SQLite. Generated with mode `0600` on first start. |
+| `OPENSCALER_MASTER_KEY` or `_FILE` | empty | Optional externally managed URL-safe base64 encoding of exactly 32 random bytes. |
+| `OPENSCALER_CATALOG_PATH` | `/etc/openscaler/catalog.yaml` | Model catalog path. |
+| `OPENSCALER_REQUEST_TIMEOUT_SECONDS` | `120` | Provider request timeout. |
+| `OPENSCALER_MAX_BODY_BYTES` | `8388608` | Maximum inference request size. |
+| `OPENSCALER_RATE_LIMIT_RPM` | `60` | Per-key requests per minute; `0` disables the RPM limit. |
+| `OPENSCALER_CONCURRENCY` | `8` | Per-key concurrent requests; `0` disables the concurrency limit. |
+| `OPENSCALER_AUTH_DISABLED` | `false` | Explicit local-only authentication bypass. |
+| `OPENSCALER_LOG_PROMPTS` | `false` | Reserved opt-in. Prompt persistence is not implemented. |
+
+The console uses HTTP Basic authentication for its management API. The default local development login used by `scripts/dev.sh` is username `admin` and password `openscaler`. `scripts/install.sh` generates a random production password in `secrets/admin_password.txt` instead. Existing installations may temporarily continue using `OPENSCALER_MANAGEMENT_TOKEN` as the administrator password while migrating.
+
+## Client API keys
+
+Use **API keys** in the top navigation to create credentials for applications calling `/v1/*`:
+
+- Keys can be created and revoked independently; their full value is shown only once.
+- SQLite stores only a SHA-256 hash, prefix, label, creation time, and last-used time for each managed key.
+
+The console intentionally presents a flat key list. The current database retains an internal key-owner record for backward-compatible storage, but users do not need to create or manage that record.
+
+Keys configured through `OPENSCALER_API_KEYS` or `OPENSCALER_API_KEYS_FILE` remain bootstrap credentials and are not listed in the API access page. They are retained for installation and backward compatibility; managed keys are recommended for normal workloads.
+
+The standard start script detects the host's active LAN address, publishes port `8080` on that address, and sets `OPENSCALER_PUBLIC_URL` to an address other machines can reach. Override `OPENSCALER_BIND_ADDRESS` and `OPENSCALER_PUBLIC_URL` when using a fixed private DNS name, reverse proxy, VPN address, or internal load balancer.
+
+Port `5173` is only the Vite development server for the web console. It proxies browser development requests to the Go service and must never be advertised as the inference endpoint. Client applications use the Go gateway at the configured `OPENSCALER_PUBLIC_URL`, normally `http://<host-lan-ip>:8080/v1`.
+
+## Provider connections
+
+The normal setup path is the console's **Models** workspace. Select an exact model ID and configure one of the endpoints displayed on the right. Official provider protocol, endpoint, authentication, and model settings are seeded into SQLite on first start. Entering or replacing an API key does not perform a network request; the connection is initially marked `unverified`.
+
+Custom endpoints support the OpenAI-compatible and Anthropic Messages protocols. HTTPS is required unless the user explicitly allows HTTP for a trusted local endpoint.
+
+For migration only, `OPENSCALER_<PROVIDER>_API_KEY`, its `_FILE` variant, and `OPENSCALER_<PROVIDER>_BASE_URL` are still accepted for built-in provider IDs. A legacy key is imported only when the database does not already contain one. New deployments should use the console.
+
+Provider secrets are encrypted with AES-256-GCM using per-secret random nonces and provider-bound associated data. The API never returns a stored credential. Losing the master key makes encrypted Provider API keys unrecoverable, so back it up separately and securely.
+
+## Model catalog
+
+`config/catalog.yaml` is a versioned seed catalog. Provider and model runtime configuration is copied into SQLite on first start and can then be changed without restarting the process. A model is available only when:
+
+1. It exists in the catalog.
+2. Its capability includes the requested endpoint.
+3. Its provider connection is enabled and has a configured key.
+
+The top-level `families` list is discovery metadata for the console's publisher → family hierarchy. Each family references its official `provider`, so the console can show the publisher-operated endpoint even before an exact model ID is configured. The gateway exposes unified text, image, embeddings, rerank, video, speech, and transcription entry points. A family with `routeable: false` still requires a provider-specific protocol or resource endpoint (for example music or moderation). It remains visible for catalog completeness, but it is never advertised by `/v1/models` and cannot receive traffic until an exact model route and compatible adapter exist.
+
+## Same-model endpoint routing
+
+Multiple connections can publish the same exact **model ID**. The main workspace groups those endpoints together and displays their order, provider, address, price metadata, and readiness.
+
+| Setting | Meaning |
+| --- | --- |
+| Priority | Lower numbers are attempted before higher numbers. The default is `100`. |
+| Weight | Relative traffic share among available routes at the same priority. The default is `100`. |
+
+The exact model ID is the aggregation key. To attach a third-party endpoint, configure it with the same model ID; its provider-specific upstream identifier may differ. Endpoint routing must never substitute a different model ID.
+
+Use **Route settings** beside the selected exact model ID to enable or exclude endpoints and select one explicit routing mode. **Sequential failover** uses the dragged top-to-bottom order and sends normal traffic to the first endpoint; the next endpoint is attempted only after a retryable failure. **Weighted traffic distribution** places all participating endpoints in one routing group and uses their relative weights for the initial request choice—for example, `70 / 30` targets approximately 70% / 30% over time. If the selected endpoint fails, the remaining endpoint is still attempted within the same request. Order and weight are intentionally not active at the same time.
+
+Enabling **Use platform default strategy** transparently ranks participating endpoints using price (45%), observed request availability (35%), latency EWMA (15%), and the selected regional preference (5%). With no observations, an endpoint starts with a neutral availability prior and a 500 ms latency prior. A zero price is treated as unknown—not free—and receives a conservative neutral price score. The score, availability, and observed latency are returned by the management API and displayed in the console; the selected model ID never changes. **Global** is region-neutral, while Asia Pacific, United States, Europe, and Local give matching endpoints a small advantage without preventing cross-region failover.
+
+Automatic failover advances on connection and timeout errors and on upstream HTTP `401`, `403`, `408`, `429`, and `5xx` responses. Other client errors are returned directly because retrying the same invalid request against another provider can hide a request problem. The gateway does not persist or replay prompts beyond the current HTTP request.
+
+Successful inference responses include `X-OpenScaler-Provider` and `X-OpenScaler-Route-Priority`, and request records identify the provider that ultimately served each request.
+
+Third-party endpoint input and output prices are configured in USD per one million tokens and feed both cost estimates and the default score. Price fields are local estimates, not provider invoices. Verify prices and model limits before production deployment.
+
+## Persistence and backups
+
+Local development uses `data/openscaler.db`; Docker uses `/data/openscaler.db` in the persistent `openscaler_data` volume. Configuration changes take effect from SQLite and survive process or container restarts. The YAML catalog remains seed data and does not overwrite operator configuration on every start.
+
+Back up SQLite together with the matching master encryption key before upgrades. See [Data and storage](DATA_AND_STORAGE.md) for stored fields, non-persisted prompt data, consistent backup, restore, reset, and schema migration details.
+
+## Optional supply publication
+
+`OPENSCALER_SUPPLY_ENABLED` defaults to `false`. Set it to `true` to enable local supply management and dedicated inference paths. See [Supply Connector](SUPPLY_CONNECTOR.md) for explicit consent, endpoint reservation, credentials and durable quotas.
